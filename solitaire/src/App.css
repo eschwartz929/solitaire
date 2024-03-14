@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.button {
+  color: yellow;
+  font-size: 26px;
+  font-family:'Courier New', Courier, monospace;
+  font-weight: bold;
+  background-color: blue;
+  height: 50px;
+  width: 200px;
+  border-radius: 15px;
+}
+
+.button:hover {
+  color: blue;
+  background-color: yellow;
+}
