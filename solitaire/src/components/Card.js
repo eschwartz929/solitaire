@@ -3,15 +3,14 @@ import "../css/Card.css"
 import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
 
-function Card({suit, number, status}) {
+function Card({suit, number, visible}) {
     const cardSuit = suits[suit]
     const cardLabel = numbers[number]
-
 
     return (
         <>
         {cardSuit && cardLabel && 
-            <div className="card">
+            <div className={visible ? 'card' : 'card hidden-card'} >
                 {cardLabel} of {cardSuit}
             </div>
         }   
