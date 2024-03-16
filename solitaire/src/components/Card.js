@@ -6,12 +6,15 @@ import numbers from "../config/cardNumbers"
 function Card({suit, number, visible}) {
     const cardSuit = suits[suit]
     const cardLabel = numbers[number]
+    const red = (suit % 2 === 1)
 
     return (
         <>
         {cardSuit && cardLabel && 
             <div className={visible ? 'card' : 'card hidden-card'} >
-                {cardLabel} of {cardSuit}
+                <div className={red ? 'red-card': ''}>
+                    {cardLabel} {cardSuit}
+                </div>
             </div>
         }   
         </>

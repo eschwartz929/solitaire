@@ -1,6 +1,6 @@
 .board {
     background-color: green;
-    width: 80%;
+    width: 70%;
     height: 700px;
 
 }
@@ -10,8 +10,31 @@
     justify-content: space-around;
 }
 
+.deck {
+    display: flex;
+    margin: 5px;
+}
+
+.piles {
+    display: flex;
+}
+
+.pile {
+    border:1px yellow solid;
+    height: 100px;
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5px;
+}
+
+.pile-suit {
+    font-size: 50px;
+}
+
 .stacks-section {
-    border:1px black solid;
+    margin-top: 5px;
     display: flex;
     justify-content: space-around;
 }

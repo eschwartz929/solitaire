@@ -1,6 +1,6 @@
 export default {
-    0: 'hearts',
-    1: 'spades',
-    2: 'diamonds',
-    3: 'clubs',
+    0: '\u2660', //spades
+    1: '\u2665', //hearts
+    2: '\u2663', //clubs
+    3: '\u2666', //diamonds
 }

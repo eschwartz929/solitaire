@@ -6,5 +6,9 @@
 }
 
 .hidden-card {
-    background-color: red;
+    background-color: gray;
+}
+
+.red-card {
+    color: red;
 }
