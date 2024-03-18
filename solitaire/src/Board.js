@@ -4,14 +4,14 @@ import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 
 
-function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation}) {
+function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
     return (
         <div className="board">
             <div className="top-row">
                 <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
                 <Piles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
             </div>
-            <Stacks stacks={stacks} selectCard={selectCard} ></Stacks>
+            <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
         </div>
     )
 }
@@ -65,12 +65,15 @@ function Piles({piles, selectCard, startFoundation}) {
     )
 }
 
-function Stacks({stacks, selectCard}) {
+function Stacks({stacks, selectCard, handleEmptyStack}) {
     return (
         <div className="stacks-section">
             {stacks.map((stack, index) => 
-                <Stack className="stack" key={index} cards={stack} selectCard={selectCard}></Stack>)
-            }
+                <>
+                    {stack.length > 0 && <Stack className="stack" key={index} cards={stack} selectCard={selectCard}></Stack>}
+                    {stack.length === 0 && <EmptyStack index={index} handleEmptyStack={handleEmptyStack}/>}
+                </>
+            )}
         </div>
     ) 
 }
@@ -78,11 +81,17 @@ function Stacks({stacks, selectCard}) {
 function Stack({cards, selectCard}) {
     return (
         <div className="stack">
-            {cards && cards.map((card, index) => 
+            {cards.map((card, index) => 
                 <Card selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
             )}
         </div>
     )
 
+}
+
+function EmptyStack({index, handleEmptyStack}) {
+    return (
+        <div onClick={() => handleEmptyStack(index)} className="empty-stack"></div>
+    )
 }
 export default Board

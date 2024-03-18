@@ -148,7 +148,6 @@ function Game() {
     }
 
     function startFoundation(suit) {
-        console.log('start foundation!')
         if (selectedCard && selectedCard.number === 1 && selectedCard.suit === suit) {
             if (selectedCard.location === 'stacks') {
                 moveCard(stacks[selectedCard.locationIndex], piles[suit].cards, 'piles', suit)
@@ -160,12 +159,32 @@ function Game() {
         }
     }
 
+    function handleEmptyStack(index) {
+        if (selectedCard && selectedCard.number === 13) {
+            if (selectedCard.location === 'stacks') {
+                moveCard(stacks[selectedCard.locationIndex], stacks[index], 'stacks', index)
+            } else if (selectedCard.location === 'discard') {
+                moveCard(discardPile, stacks[index], 'stacks', index)
+            }
+        }
+    }
+
 
     return (
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                <Board deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard} piles={piles} stacks={stacks} startFoundation={startFoundation}></Board>}
+                <Board 
+                    deck={deck} 
+                    discardPile={discardPile} 
+                    drawCard={drawCard} 
+                    selectCard={selectCard} 
+                    piles={piles} 
+                    stacks={stacks} 
+                    startFoundation={startFoundation}
+                    handleEmptyStack={handleEmptyStack}
+                />
+            }
         </div>
     )
 }

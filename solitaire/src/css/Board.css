@@ -43,3 +43,11 @@
 .stack {
     margin: 5px;
 }
+
+.empty-stack {
+    margin: 5px;
+    height: 100px;
+    width: 70px;
+    background-color: black;
+    border-radius: 3px;
+}
