@@ -89,14 +89,16 @@ function Game() {
     }
 
     function drawCard() {
-        if (selectedCard.length === 0) {
-            var nextCard = deck.pop()
-            nextCard.visible = true
-            nextCard.location = 'discard'
-            discardPile.push(nextCard)
-            setDeck(deck)
-            setDiscardPile(discardPile)
+        for (var i = 0; i < selectedCard.length; i++) {
+            selectedCard[i].selected = false
+            setSelectedCard([])
         }
+        var nextCard = deck.pop()
+        nextCard.visible = true
+        nextCard.location = 'discard'
+        discardPile.push(nextCard)
+        setDeck(deck)
+        setDiscardPile(discardPile)
     }
 
     function selectCard(card, stackIndex) {
@@ -135,26 +137,51 @@ function Game() {
 
                             if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {               
                                 moveCard(source, stacks[card.locationIndex], card.location, card.locationIndex)         
+                            } else {
+                                selectedCard[0].selected = false
+                                card.selected = true
+                                setSelectedCard([card])
                             }
-    
-    
+
                     } else if (card.location === 'piles') {
 
                         if (card.color === selectedCard[0].color && card.number === selectedCard[0].number - 1) {
                             moveCard(source, piles[card.suit].cards, card.location, card.locationIndex)
+                        } else {
+                            selectedCard[0].selected = false
+                            card.selected = true
+                            setSelectedCard([card])
                         }
                     
+                    } else {
+                        selectedCard[0].selected = false
+                        card.selected = true
+                        setSelectedCard([card])
                     }
                 } else {
-                    card.selected = false
-                    setSelectedCard([])
+                    selectedCard[0].selected = false
+                    card.selected = true
+                    setSelectedCard([card])
                 }
 
             } else if (selectedCard.length > 1) {
                 if (card.location === 'stacks') {
                     if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {             
                         moveCard(stacks[selectedCard[0].locationIndex], stacks[card.locationIndex], card.location, card.locationIndex)         
+                    } else {
+
+                        for (var i = 0; i < selectedCard.length; i++) {
+                            selectedCard[i].selected = false
+                        }
+                        card.selected = true
+                        setSelectedCard(card)
                     }
+                } else {
+                    for (var i = 0; i < selectedCard.length; i++) {
+                        selectedCard[i].selected = false
+                    }
+                    card.selected = true
+                    setSelectedCard(card)
                 }
             }
         }
