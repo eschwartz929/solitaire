@@ -5,20 +5,18 @@ import suits from "./config/suits"
 
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks}) {
-    console.log('stacks: ', stacks)
-    console.log('piles: ', piles)
     return (
         <div className="board">
             <div className="top-row">
-                <Deck deck={deck} discardPile={discardPile} drawCard={drawCard}/>
-                <Piles piles={piles}/>
+                <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
+                <Piles piles={piles} selectCard={selectCard}/>
             </div>
             <Stacks stacks={stacks} selectCard={selectCard} ></Stacks>
         </div>
     )
 }
 
-function Deck({deck, discardPile, drawCard}) {
+function Deck({deck, discardPile, drawCard, selectCard}) {
     const [topCard, setTopCard] = useState(deck[deck.length - 1])
     const [topDiscard, setTopDiscard] = useState(discardPile[discardPile.length - 1])
 
@@ -34,9 +32,6 @@ function Deck({deck, discardPile, drawCard}) {
     }, [deck, discardPile])
 
     function clickDeck() {
-        console.log('clicked!')
-        console.log('1deck:', deck)
-        console.log('1discard: ', discardPile)
         drawCard()
         setTopCard(deck[deck.length - 1])
         setTopDiscard(discardPile[discardPile.length - 1])
@@ -45,16 +40,14 @@ function Deck({deck, discardPile, drawCard}) {
     return (
         <div className="deck">
             {deck.length > 0 && 
-                <div onClick={clickDeck}>
-                    <Card card={topCard}></Card>
-                </div>
+                <Card card={topCard} selectCard={clickDeck}></Card>
             }
-            {discardPile.length > 0 && <Card card={topDiscard}></Card>}
+            {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
         </div>
     )
 }
 
-function Piles({piles}) {
+function Piles({piles, selectCard}) {
 
     return (
         <div className="piles">
@@ -62,7 +55,7 @@ function Piles({piles}) {
                 return (
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
-                            ? <Card/>
+                            ? <Card selectCard={selectCard}/>
                             : <div className="pile-suit">{suits[pile.suit]}</div>
                         }
                     </div>)
@@ -85,7 +78,7 @@ function Stacks({stacks, selectCard}) {
 function Stack({cards, selectCard}) {
     return (
         <div className="stack">
-            {cards.map((card, index) => 
+            {cards && cards.map((card, index) => 
                 <Card selectCard={selectCard} key={index} card={card}></Card>
             )}
         </div>

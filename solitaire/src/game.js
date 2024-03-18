@@ -17,7 +17,8 @@ function Game() {
             for (var i = 1; i < 14; i++) {
 
                 for (var j = 0; j < 4; j++) {
-                    fullDeck.push({suit: j, number: i, visible: false})
+                    var color = j % 2 === 0 ? 'black' : 'red'
+                    fullDeck.push({suit: j, number: i, visible: false, color: color})
                 }
 
             }
@@ -49,17 +50,16 @@ function Game() {
     }
 
     function deal() {
-        var initStacks = []
         var stackIndex = 0
         var cardsPerStack = 0
-
-        console.log('deck: ', fullDeck)
 
         for (var i = 0; i < 28; i++) {
 
             if (!stacks[stackIndex]) stacks[stackIndex] = []
 
             var card = fullDeck[i]
+            card.location = 'stacks'
+            card.locationIndex = stackIndex
 
             if (cardsPerStack === stackIndex) {
                 card.visible = true
@@ -71,46 +71,70 @@ function Game() {
                 cardsPerStack++
             }
         }
+
         for (var i = 28; i < 51; i++) {
-            deck.push(fullDeck[i])
+            var card = fullDeck[i]
+            card.location = 'deck'
+            card.locationIndex = 0
+            deck.push(card)
         }
+
         fullDeck[51].visible = true
+        fullDeck[51].location = 'discard'
+        fullDeck[51].locationIndex = 0
         discardPile.push(fullDeck[51])
-        console.log('init stacks:', stacks)
-        console.log('deckk:', deck)
-        console.log('discard pile: ', discardPile)
         setStacks(stacks)
         setDeck(deck)
         setDiscardPile(discardPile)
     }
 
     function drawCard() {
-        console.log('draw card!')
-        var nextCard = deck.pop()
-        nextCard.visible = true
-        console.log('next: ', nextCard)
-        discardPile.push(nextCard)
-        setDeck(deck)
-        setDiscardPile(discardPile)
+        if (selectedCard.length === 0) {
+            var nextCard = deck.pop()
+            nextCard.visible = true
+            nextCard.location = 'discard'
+            discardPile.push(nextCard)
+            setDeck(deck)
+            setDiscardPile(discardPile)
+        }
     }
 
-    function selectCard(card, source) {
+    function selectCard(card) {
         if (card.visible) {
-            if (card.selected) {
-                card.selected = false
-                setSelectedCard([])
-            } else {
+            if (selectedCard.length === 0) {
                 card.selected = true
                 setSelectedCard(card)
+            } else {
+                if (card.location === 'stacks') {
+
+                    if (selectedCard.location === 'stacks') {
+                        if (card.locationIndex !== selectedCard.locationIndex) {
+                            moveCard(card, stacks[selectedCard.locationIndex], stacks[card.locationIndex])
+                        }
+                    } else if (selectedCard.location === 'discard') {
+                        moveCard(card, discardPile, stacks[card.locationIndex])
+                    }
+                    selectedCard.selected = false
+                    setSelectedCard([])
+                }
             }
         }
     }
 
     function moveCard(card, source, destination) {
-        if (card.visible) {
-
-        }
+        console.log('we moving')
+        if (card.color !== selectedCard.color && card.number === selectedCard.number + 1) {
+            console.log('valid move!')
+            console.log('source: ', source)
+            source.pop()
+            selectedCard.location = card.location
+            selectedCard.locationIndex = card.locationIndex
+            destination.push(selectedCard)
+            setStacks(stacks)
+            setDiscardPile(discardPile)
+        } 
     }
+
 
     return (
         <div className="game">
