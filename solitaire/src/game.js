@@ -99,26 +99,48 @@ function Game() {
         }
     }
 
-    function selectCard(card) {
+    function selectCard(card, stackIndex) {
         if (card.visible) {
-            if (selectedCard.length === 0) {
-                card.selected = true
-                setSelectedCard(card)
-            } else {
-                if (selectedCard.location === 'stacks' || selectedCard.location === 'discard') {
 
-                    var source = selectedCard.location === 'stacks' ? stacks[selectedCard.locationIndex] : discardPile
+            if (selectedCard.length === 0) {
+
+                if (card.location === 'stacks') {
+
+                    var currentStack = stacks[card.locationIndex]
+
+                    if (stackIndex === currentStack.length - 1) {
+                        card.selected = true
+                        setSelectedCard([card])
+                    } else {
+                        var cardArr = []
+                        for (var i = stackIndex; i < currentStack.length; i++) {
+                            currentStack[i].selected = true
+                            cardArr.push(currentStack[i])
+                        }
+                        setSelectedCard(cardArr)
+                    }
+
+                } else {
+                    card.selected = true
+                    setSelectedCard([card])
+                }
+
+            } else if (selectedCard.length === 1) {
+
+                if (selectedCard[0].location === 'stacks' || selectedCard[0].location === 'discard') {
+
+                    var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
 
                     if (card.location === 'stacks') {
 
-                            if (card.color !== selectedCard.color && card.number === selectedCard.number + 1) {               
+                            if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {               
                                 moveCard(source, stacks[card.locationIndex], card.location, card.locationIndex)         
                             }
     
     
                     } else if (card.location === 'piles') {
 
-                        if (card.color === selectedCard.color && card.number === selectedCard.number - 1) {
+                        if (card.color === selectedCard[0].color && card.number === selectedCard[0].number - 1) {
                             moveCard(source, piles[card.suit].cards, card.location, card.locationIndex)
                         }
                     
@@ -128,19 +150,28 @@ function Game() {
                     setSelectedCard([])
                 }
 
+            } else if (selectedCard.length > 1) {
+                if (card.location === 'stacks') {
+                    if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {             
+                        moveCard(stacks[selectedCard[0].locationIndex], stacks[card.locationIndex], card.location, card.locationIndex)         
+                    }
+                }
             }
         }
     }
 
     function moveCard(source, destination, location, locationIndex) {
-            source.pop()
+            for (var i = 0; i < selectedCard.length; i++) {
+                source.pop()
+                selectedCard[i].location = location
+                selectedCard[i].locationIndex = locationIndex                    
+                selectedCard[i].selected = false
+                destination.push(selectedCard[i])
+            }
             if (source.length > 0) {
                 source[source.length - 1].visible = true
             }
-            selectedCard.location = location
-            selectedCard.locationIndex = locationIndex                    
-            selectedCard.selected = false
-            destination.push(selectedCard)
+
             setStacks(stacks)
             setDiscardPile(discardPile)
             setPiles(piles)
@@ -148,11 +179,11 @@ function Game() {
     }
 
     function startFoundation(suit) {
-        if (selectedCard && selectedCard.number === 1 && selectedCard.suit === suit) {
-            if (selectedCard.location === 'stacks') {
-                moveCard(stacks[selectedCard.locationIndex], piles[suit].cards, 'piles', suit)
+        if (selectedCard && selectedCard.length === 1 && selectedCard[0].number === 1 && selectedCard[0].suit === suit) {
+            if (selectedCard[0].location === 'stacks') {
+                moveCard(stacks[selectedCard[0].locationIndex], piles[suit].cards, 'piles', suit)
                 setPiles(piles)
-            } else if (selectedCard.location === 'discard') {
+            } else if (selectedCard[0].location === 'discard') {
                 moveCard(discardPile, piles[suit].cards, 'piles', suit)
                 setPiles(piles)
             }
@@ -160,15 +191,14 @@ function Game() {
     }
 
     function handleEmptyStack(index) {
-        if (selectedCard && selectedCard.number === 13) {
-            if (selectedCard.location === 'stacks') {
-                moveCard(stacks[selectedCard.locationIndex], stacks[index], 'stacks', index)
-            } else if (selectedCard.location === 'discard') {
+        if (selectedCard && selectedCard.length === 1 && selectedCard[0].number === 13) {
+            if (selectedCard[0].location === 'stacks') {
+                moveCard(stacks[selectedCard[0].locationIndex], stacks[index], 'stacks', index)
+            } else if (selectedCard[0].location === 'discard') {
                 moveCard(discardPile, stacks[index], 'stacks', index)
             }
         }
     }
-
 
     return (
         <div className="game">

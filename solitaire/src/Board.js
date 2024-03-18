@@ -69,10 +69,10 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
     return (
         <div className="stacks-section">
             {stacks.map((stack, index) => 
-                <>
-                    {stack.length > 0 && <Stack className="stack" key={index} cards={stack} selectCard={selectCard}></Stack>}
+                <div key={index}>
+                    {stack.length > 0 && <Stack className="stack" cards={stack} selectCard={selectCard}></Stack>}
                     {stack.length === 0 && <EmptyStack index={index} handleEmptyStack={handleEmptyStack}/>}
-                </>
+                </div>
             )}
         </div>
     ) 
@@ -82,7 +82,7 @@ function Stack({cards, selectCard}) {
     return (
         <div className="stack">
             {cards.map((card, index) => 
-                <Card selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
+                <Card index={index} selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
             )}
         </div>
     )

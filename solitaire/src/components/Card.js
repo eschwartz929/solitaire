@@ -3,7 +3,7 @@ import "../css/Card.css"
 import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
 
-function Card({card, selectCard, stacked}) {
+function Card({card, selectCard, stacked, index}) {
     const [cardSuit, setCardSuit] = useState(0)
     const [cardLabel, setCardLabel] = useState('')
     useEffect(() => {
@@ -13,11 +13,19 @@ function Card({card, selectCard, stacked}) {
         }
     }, [card])
 
+    function handleClick() {
+        if (index) {
+            selectCard(card, index)
+        } else {
+            selectCard(card, 0)
+        }
+    }
+
     return (
         <>
         {cardSuit && cardLabel && 
             <div 
-                onClick={() => selectCard(card)} 
+                onClick={handleClick} 
                 className={'card' 
                     + (!card.visible ? ' hidden-card ' : '') 
                     + (card.color === 'red' ? ' red-card': '') 
