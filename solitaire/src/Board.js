@@ -56,7 +56,7 @@ function Piles({piles, selectCard}) {
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
                             ? <Card selectCard={selectCard}/>
-                            : <div className="pile-suit">{suits[pile.suit]}</div>
+                            : <div className={"pile-suit" + ((index % 2 === 1) ? " red-card": "")}>{suits[pile.suit]}</div>
                         }
                     </div>)
             }
@@ -79,7 +79,7 @@ function Stack({cards, selectCard}) {
     return (
         <div className="stack">
             {cards && cards.map((card, index) => 
-                <Card selectCard={selectCard} key={index} card={card}></Card>
+                <Card selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
             )}
         </div>
     )

@@ -122,11 +122,11 @@ function Game() {
     }
 
     function moveCard(card, source, destination) {
-        console.log('we moving')
         if (card.color !== selectedCard.color && card.number === selectedCard.number + 1) {
-            console.log('valid move!')
-            console.log('source: ', source)
             source.pop()
+            if (source.length > 0) {
+                source[source.length - 1].visible = true
+            }
             selectedCard.location = card.location
             selectedCard.locationIndex = card.locationIndex
             destination.push(selectedCard)
