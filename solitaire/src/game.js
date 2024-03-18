@@ -104,86 +104,59 @@ function Game() {
     function selectCard(card, stackIndex) {
         if (card.visible) {
 
-            if (selectedCard.length === 0) {
+            if (card.location === 'stacks' && selectedCard.length > 0 && stackIndex === stacks[card.locationIndex].length - 1
+                    && card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {
+
+                var source = []
+
+                switch(selectedCard[0].location) {
+                    case 'stacks':
+                        source = stacks[selectedCard[0].locationIndex]
+                    case 'discard':
+                        source = discardPile
+                    case 'piles':
+                        source = piles[selectedCard[0].locationIndex]
+                }
+
+                var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
+                var destination = stacks[card.locationIndex]
+
+                moveCard(source, destination, card.location, card.locationIndex)
+
+            } else if (card.location === 'piles' && selectedCard.length === 1 && (selectedCard[0].location === 'stacks' || selectedCard[0].location === 'discard')
+                    && card.color === selectedCard[0].color && card.number === selectedCard[0].number - 1) {
+
+                var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
+                var destination = piles[card.locationIndex].cards
+
+                moveCard(source, destination, card.location, card.locationIndex)
+
+            } else {
+                for (var i = 0; i < selectedCard.length; i++) {
+                    selectedCard[i].selected = false
+                }
 
                 if (card.location === 'stacks') {
 
                     var currentStack = stacks[card.locationIndex]
-
-                    if (stackIndex === currentStack.length - 1) {
-                        card.selected = true
-                        setSelectedCard([card])
-                    } else {
-                        var cardArr = []
-                        for (var i = stackIndex; i < currentStack.length; i++) {
-                            currentStack[i].selected = true
-                            cardArr.push(currentStack[i])
-                        }
-                        setSelectedCard(cardArr)
+                    var cardArr = []
+                    for (var i = stackIndex; i < currentStack.length; i++) {
+                        currentStack[i].selected = true
+                        cardArr.push(currentStack[i])
                     }
+                    setSelectedCard(cardArr)
 
                 } else {
                     card.selected = true
                     setSelectedCard([card])
-                }
-
-            } else if (selectedCard.length === 1) {
-
-                if (selectedCard[0].location === 'stacks' || selectedCard[0].location === 'discard') {
-
-                    var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
-
-                    if (card.location === 'stacks') {
-
-                            if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {               
-                                moveCard(source, stacks[card.locationIndex], card.location, card.locationIndex)         
-                            } else {
-                                selectedCard[0].selected = false
-                                card.selected = true
-                                setSelectedCard([card])
-                            }
-
-                    } else if (card.location === 'piles') {
-
-                        if (card.color === selectedCard[0].color && card.number === selectedCard[0].number - 1) {
-                            moveCard(source, piles[card.suit].cards, card.location, card.locationIndex)
-                        } else {
-                            selectedCard[0].selected = false
-                            card.selected = true
-                            setSelectedCard([card])
-                        }
-                    
-                    } else {
-                        selectedCard[0].selected = false
-                        card.selected = true
-                        setSelectedCard([card])
-                    }
-                } else {
-                    selectedCard[0].selected = false
-                    card.selected = true
-                    setSelectedCard([card])
-                }
-
-            } else if (selectedCard.length > 1) {
-                if (card.location === 'stacks') {
-                    if (card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {             
-                        moveCard(stacks[selectedCard[0].locationIndex], stacks[card.locationIndex], card.location, card.locationIndex)         
-                    } else {
-
-                        for (var i = 0; i < selectedCard.length; i++) {
-                            selectedCard[i].selected = false
-                        }
-                        card.selected = true
-                        setSelectedCard(card)
-                    }
-                } else {
-                    for (var i = 0; i < selectedCard.length; i++) {
-                        selectedCard[i].selected = false
-                    }
-                    card.selected = true
-                    setSelectedCard(card)
                 }
             }
+
+        } else {
+            for (var i = 0; i < selectedCard.length; i++) {
+                selectedCard[i].selected = false
+            }
+            setSelectedCard([])
         }
     }
 
