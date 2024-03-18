@@ -105,63 +105,57 @@ function Game() {
                 card.selected = true
                 setSelectedCard(card)
             } else {
-                if (card.location === 'stacks') {
+                if (selectedCard.location === 'stacks' || selectedCard.location === 'discard') {
 
-                    if (selectedCard.location === 'stacks') {
-                        if (card.locationIndex !== selectedCard.locationIndex) {
-                            moveCard(card, stacks[selectedCard.locationIndex], stacks[card.locationIndex])
+                    var source = selectedCard.location === 'stacks' ? stacks[selectedCard.locationIndex] : discardPile
+
+                    if (card.location === 'stacks') {
+
+                            if (card.color !== selectedCard.color && card.number === selectedCard.number + 1) {               
+                                moveCard(source, stacks[card.locationIndex], card.location, card.locationIndex)         
+                            }
+    
+    
+                    } else if (card.location === 'piles') {
+
+                        if (card.color === selectedCard.color && card.number === selectedCard.number - 1) {
+                            moveCard(source, piles[card.suit].cards, card.location, card.locationIndex)
                         }
-                    } else if (selectedCard.location === 'discard') {
-                        moveCard(card, discardPile, stacks[card.locationIndex])
+                    
                     }
-                    selectedCard.selected = false
+                } else {
+                    card.selected = false
                     setSelectedCard([])
-
-                } else if (card.location === 'piles') {
-
                 }
+
             }
         }
     }
 
-    function moveCard(card, source, destination) {
-        if (card.color !== selectedCard.color && card.number === selectedCard.number + 1) {
+    function moveCard(source, destination, location, locationIndex) {
             source.pop()
             if (source.length > 0) {
                 source[source.length - 1].visible = true
             }
-            selectedCard.location = card.location
-            selectedCard.locationIndex = card.locationIndex
+            selectedCard.location = location
+            selectedCard.locationIndex = locationIndex                    
+            selectedCard.selected = false
             destination.push(selectedCard)
             setStacks(stacks)
             setDiscardPile(discardPile)
-        } 
+            setPiles(piles)
+            setSelectedCard([])
     }
 
     function startFoundation(suit) {
+        console.log('start foundation!')
         if (selectedCard && selectedCard.number === 1 && selectedCard.suit === suit) {
             if (selectedCard.location === 'stacks') {
-                var source = stacks[selectedCard.locationIndex]
-                source.pop()
-                if (source.length > 0) {
-                    source[source.length - 1].visible = true
-                }
-                selectedCard.location = 'piles'
-                selectedCard.locationIndex = suit
-                selectedCard.selected = false
-                piles[suit].cards.push(selectedCard)
-                setStacks(stacks)
+                moveCard(stacks[selectedCard.locationIndex], piles[suit].cards, 'piles', suit)
                 setPiles(piles)
-                setSelectedCard([])
             } else if (selectedCard.location === 'discard') {
-                discardPile.pop()
-                selectedCard.location = 'piles'
-                selectedCard.locationIndex = suit
-                selectedCard.selected = false
-                piles[suit].cards.push(selectedCard)
-                setStacks(stacks)
+                moveCard(discardPile, piles[suit].cards, 'piles', suit)
                 setPiles(piles)
-                setSelectedCard([])
             }
         }
     }
