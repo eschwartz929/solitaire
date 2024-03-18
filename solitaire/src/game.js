@@ -116,6 +116,9 @@ function Game() {
                     }
                     selectedCard.selected = false
                     setSelectedCard([])
+
+                } else if (card.location === 'piles') {
+
                 }
             }
         }
@@ -135,12 +138,40 @@ function Game() {
         } 
     }
 
+    function startFoundation(suit) {
+        if (selectedCard && selectedCard.number === 1 && selectedCard.suit === suit) {
+            if (selectedCard.location === 'stacks') {
+                var source = stacks[selectedCard.locationIndex]
+                source.pop()
+                if (source.length > 0) {
+                    source[source.length - 1].visible = true
+                }
+                selectedCard.location = 'piles'
+                selectedCard.locationIndex = suit
+                selectedCard.selected = false
+                piles[suit].cards.push(selectedCard)
+                setStacks(stacks)
+                setPiles(piles)
+                setSelectedCard([])
+            } else if (selectedCard.location === 'discard') {
+                discardPile.pop()
+                selectedCard.location = 'piles'
+                selectedCard.locationIndex = suit
+                selectedCard.selected = false
+                piles[suit].cards.push(selectedCard)
+                setStacks(stacks)
+                setPiles(piles)
+                setSelectedCard([])
+            }
+        }
+    }
+
 
     return (
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                <Board deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard} piles={piles} stacks={stacks}></Board>}
+                <Board deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard} piles={piles} stacks={stacks} startFoundation={startFoundation}></Board>}
         </div>
     )
 }

@@ -4,8 +4,14 @@ import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
 
 function Card({card, selectCard, stacked}) {
-    const cardSuit = suits[card.suit]
-    const cardLabel = numbers[card.number]
+    const [cardSuit, setCardSuit] = useState(0)
+    const [cardLabel, setCardLabel] = useState('')
+    useEffect(() => {
+        if (card) {
+            setCardSuit(suits[card.suit])
+            setCardLabel(numbers[card.number])
+        }
+    }, [card])
 
     return (
         <>

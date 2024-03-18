@@ -4,12 +4,12 @@ import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 
 
-function Board({deck, discardPile, drawCard, selectCard, piles, stacks}) {
+function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation}) {
     return (
         <div className="board">
             <div className="top-row">
                 <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
-                <Piles piles={piles} selectCard={selectCard}/>
+                <Piles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
             </div>
             <Stacks stacks={stacks} selectCard={selectCard} ></Stacks>
         </div>
@@ -47,7 +47,7 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
     )
 }
 
-function Piles({piles, selectCard}) {
+function Piles({piles, selectCard, startFoundation}) {
 
     return (
         <div className="piles">
@@ -55,8 +55,8 @@ function Piles({piles, selectCard}) {
                 return (
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
-                            ? <Card selectCard={selectCard}/>
-                            : <div className={"pile-suit" + ((index % 2 === 1) ? " red-card": "")}>{suits[pile.suit]}</div>
+                            ? <Card card={pile.cards[pile.cards.length - 1]} selectCard={selectCard}/>
+                            : <div className={"pile-suit" + ((index % 2 === 1) ? " red-card": "")} onClick={() => startFoundation(pile.suit)}>{suits[pile.suit]}</div>
                         }
                     </div>)
             }
