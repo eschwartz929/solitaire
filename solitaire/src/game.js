@@ -9,6 +9,7 @@ function Game() {
     const [discardPile, setDiscardPile] = useState([])
     const [stacks, setStacks] = useState([])
     const [piles, setPiles] = useState([{suit: 0, cards: []}, {suit: 1, cards: []}, {suit: 2, cards: []}, {suit: 3, cards: []}])
+    const [selectedCard, setSelectedCard] = useState([])
 
     useEffect(() => {
         if (fullDeck.length === 0) {
@@ -93,13 +94,29 @@ function Game() {
         setDiscardPile(discardPile)
     }
 
+    function selectCard(card, source) {
+        if (card.visible) {
+            if (card.selected) {
+                card.selected = false
+                setSelectedCard([])
+            } else {
+                card.selected = true
+                setSelectedCard(card)
+            }
+        }
+    }
+
+    function moveCard(card, source, destination) {
+        if (card.visible) {
+
+        }
+    }
+
     return (
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                // deck.map((card, index) => <Card key={index} suit={card.suit} number={card.number}></Card>)
-                // }
-                <Board deck={deck} discardPile={discardPile} drawCard={drawCard} piles={piles} stacks={stacks}></Board>}
+                <Board deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard} piles={piles} stacks={stacks}></Board>}
         </div>
     )
 }

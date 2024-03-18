@@ -27,6 +27,7 @@
     flex-direction: column;
     justify-content: center;
     margin: 5px;
+    border-radius: 3px;
 }
 
 .pile-suit {
@@ -37,4 +38,8 @@
     margin-top: 5px;
     display: flex;
     justify-content: space-around;
+}
+
+.stack {
+    margin: 5px;
 }

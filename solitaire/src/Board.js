@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 
 
-function Board({deck, discardPile, drawCard, piles, stacks}) {
+function Board({deck, discardPile, drawCard, selectCard, piles, stacks}) {
     console.log('stacks: ', stacks)
     console.log('piles: ', piles)
     return (
@@ -13,7 +13,7 @@ function Board({deck, discardPile, drawCard, piles, stacks}) {
                 <Deck deck={deck} discardPile={discardPile} drawCard={drawCard}/>
                 <Piles piles={piles}/>
             </div>
-            <Stacks stacks={stacks}></Stacks>
+            <Stacks stacks={stacks} selectCard={selectCard} ></Stacks>
         </div>
     )
 }
@@ -46,10 +46,10 @@ function Deck({deck, discardPile, drawCard}) {
         <div className="deck">
             {deck.length > 0 && 
                 <div onClick={clickDeck}>
-                    <Card suit={topCard.suit} number={topCard.number} visible={topCard.visible}></Card>
+                    <Card card={topCard}></Card>
                 </div>
             }
-            {discardPile.length > 0 && <Card suit={topDiscard.suit} number={topDiscard.number} visible={topDiscard.visible}></Card>}
+            {discardPile.length > 0 && <Card card={topDiscard}></Card>}
         </div>
     )
 }
@@ -72,25 +72,21 @@ function Piles({piles}) {
     )
 }
 
-function Stacks({stacks}) {
+function Stacks({stacks, selectCard}) {
     return (
         <div className="stacks-section">
             {stacks.map((stack, index) => 
-                <Stack key={index} cards={stack}></Stack>)
+                <Stack className="stack" key={index} cards={stack} selectCard={selectCard}></Stack>)
             }
         </div>
     ) 
 }
 
-function Stack({cards}) {
+function Stack({cards, selectCard}) {
     return (
         <div className="stack">
             {cards.map((card, index) => 
-                <Card 
-                    key={index} 
-                    suit={card.suit} 
-                    number={card.number} 
-                    visible={card.visible}></Card>
+                <Card selectCard={selectCard} key={index} card={card}></Card>
             )}
         </div>
     )

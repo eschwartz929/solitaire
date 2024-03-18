@@ -3,6 +3,7 @@
     background-color: white;
     height: 100px;
     width: 70px;
+    border-radius: 3px;
 }
 
 .hidden-card {
@@ -11,4 +12,8 @@
 
 .red-card {
     color: red;
+}
+
+.selected-card {
+    background-color: yellow;
 }
