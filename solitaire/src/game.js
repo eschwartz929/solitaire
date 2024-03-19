@@ -126,7 +126,6 @@ function Game() {
                             break
                     }
 
-                    var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
                     var destination = stacks[card.locationIndex]
 
                     moveCard(source, destination, card.location, card.locationIndex)
