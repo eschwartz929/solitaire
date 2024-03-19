@@ -20,18 +20,7 @@
 }
 
 .pile {
-    border:1px yellow solid;
-    height: 100px;
-    width: 70px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     margin: 5px;
-    border-radius: 3px;
-}
-
-.pile-suit {
-    font-size: 50px;
 }
 
 .stacks-section {
@@ -42,12 +31,4 @@
 
 .stack {
     margin: 5px;
-}
-
-.empty-stack {
-    margin: 5px;
-    height: 100px;
-    width: 70px;
-    background-color: black;
-    border-radius: 3px;
 }

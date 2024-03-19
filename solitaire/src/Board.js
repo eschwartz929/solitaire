@@ -2,6 +2,7 @@ import './css/Board.css'
 import Card from './components/Card'
 import {useEffect, useState} from 'react'
 import suits from "./config/suits"
+import EmptyCard from './components/EmptyCard'
 
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
@@ -21,11 +22,11 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
     const [topDiscard, setTopDiscard] = useState(discardPile[discardPile.length - 1])
 
     useEffect(() => {
-        if (deck.length > 1) {
+        if (deck.length > 0) {
             setTopCard(deck[deck.length - 1])
         }
 
-        if (discardPile.length > 1) {
+        if (discardPile.length > 0) {
             setTopDiscard(discardPile[discardPile.length - 1])
         }
 
@@ -39,10 +40,10 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
 
     return (
         <div className="deck">
-            {deck.length > 0 && 
-                <Card card={topCard} selectCard={clickDeck}></Card>
-            }
-            {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
+            {deck.length > 0 && <Card card={topCard} selectCard={clickDeck}></Card>}
+            {deck.length === 0 && <EmptyCard icon='&#8635;' handleClick={drawCard}/>}
+            {discardPile.length > 0 && <Card card={topDiscard} selectCard={selectCard}></Card>}
+            {discardPile.length === 0 && <EmptyCard icon=''/>}
         </div>
     )
 }
@@ -55,9 +56,9 @@ function Piles({piles, selectCard, startFoundation}) {
                 return (
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
-                            ? <Card card={pile.cards[pile.cards.length - 1]} selectCard={selectCard}/>
-                            : <div className={"pile-suit" + ((index % 2 === 1) ? " red-card": "")} onClick={() => startFoundation(pile.suit)}>{suits[pile.suit]}</div>
-                        }
+                            ? <Card className="pile" card={pile.cards[pile.cards.length - 1]} selectCard={selectCard}/>
+                            : <EmptyCard icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
+                                                    }
                     </div>)
             }
             )}
@@ -69,9 +70,9 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
     return (
         <div className="stacks-section">
             {stacks.map((stack, index) => 
-                <div key={index}>
-                    {stack.length > 0 && <Stack className="stack" cards={stack} selectCard={selectCard}></Stack>}
-                    {stack.length === 0 && <EmptyStack index={index} handleEmptyStack={handleEmptyStack}/>}
+                <div className="stack" key={index}>
+                    {stack.length > 0 && <Stack cards={stack} selectCard={selectCard}></Stack>}
+                    {stack.length === 0 && <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>}
                 </div>
             )}
         </div>
@@ -89,9 +90,4 @@ function Stack({cards, selectCard}) {
 
 }
 
-function EmptyStack({index, handleEmptyStack}) {
-    return (
-        <div onClick={() => handleEmptyStack(index)} className="empty-stack"></div>
-    )
-}
 export default Board

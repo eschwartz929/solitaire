@@ -27,13 +27,6 @@ function Game() {
 
     }, [fullDeck])
 
-    // useEffect(() => {
-    //     if (piles.length === 0) {
-    //         setPiles([{suit: 0, cards: []}, {suit: 1, cards: []}, {suit: 2, cards: []}, {suit: 3, cards: []}])
-    //     }
-
-    // }, [piles])
-
     function newGame() {
         setActiveGame(true)
         shuffle()
@@ -72,20 +65,15 @@ function Game() {
             }
         }
 
-        for (var i = 28; i < 51; i++) {
+        for (var i = 28; i < 52; i++) {
             var card = fullDeck[i]
             card.location = 'deck'
             card.locationIndex = 0
             deck.push(card)
         }
 
-        fullDeck[51].visible = true
-        fullDeck[51].location = 'discard'
-        fullDeck[51].locationIndex = 0
-        discardPile.push(fullDeck[51])
         setStacks(stacks)
         setDeck(deck)
-        setDiscardPile(discardPile)
     }
 
     function drawCard() {
@@ -93,12 +81,18 @@ function Game() {
             selectedCard[i].selected = false
             setSelectedCard([])
         }
-        var nextCard = deck.pop()
-        nextCard.visible = true
-        nextCard.location = 'discard'
-        discardPile.push(nextCard)
-        setDeck(deck)
-        setDiscardPile(discardPile)
+        if (deck.length > 0) {
+            var nextCard = deck.pop()
+            nextCard.visible = true
+            nextCard.location = 'discard'
+            discardPile.push(nextCard)
+            setDeck(deck)
+            setDiscardPile(discardPile)
+        } else {
+            var temp = deck
+            setDeck(discardPile)
+            setDiscardPile(temp)
+        }
     }
 
     function selectCard(card, stackIndex) {
@@ -115,20 +109,16 @@ function Game() {
                 if (card.location === 'stacks' && selectedCard.length > 0 && stackIndex === stacks[card.locationIndex].length - 1
                     && card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {
 
-                    console.log(selectedCard)
                     var source = []
 
                     switch(selectedCard[0].location) {
                         case 'stacks':
-                            console.log('stacks!')
                             source = stacks[selectedCard[0].locationIndex]
                             break
                         case 'discard':
-                            console.log('discard!')
                             source = discardPile
                             break
                         case 'piles':
-                            console.log('piles!')
                             source = piles[selectedCard[0].locationIndex].cards
                             break
                     }
