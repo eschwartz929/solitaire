@@ -19,30 +19,25 @@ function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFou
 
 function Deck({deck, discardPile, drawCard, selectCard}) {
     const [topCard, setTopCard] = useState(deck[deck.length - 1])
-    const [topDiscard, setTopDiscard] = useState(discardPile[discardPile.length - 1])
 
     useEffect(() => {
+
         if (deck.length > 0) {
             setTopCard(deck[deck.length - 1])
         }
 
-        if (discardPile.length > 0) {
-            setTopDiscard(discardPile[discardPile.length - 1])
-        }
-
-    }, [deck, discardPile])
+    }, [deck])
 
     function clickDeck() {
         drawCard()
         setTopCard(deck[deck.length - 1])
-        setTopDiscard(discardPile[discardPile.length - 1])
     }
 
     return (
         <div className="deck">
-            {deck.length > 0 && <Card card={topCard} selectCard={clickDeck}></Card>}
+            {deck.length > 0 && <Card card={deck[deck.length - 1]} selectCard={clickDeck}></Card>}
             {deck.length === 0 && <EmptyCard icon='&#8635;' handleClick={drawCard}/>}
-            {discardPile.length > 0 && <Card card={topDiscard} selectCard={selectCard}></Card>}
+            {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
             {discardPile.length === 0 && <EmptyCard icon=''/>}
         </div>
     )
@@ -87,7 +82,6 @@ function Stack({cards, selectCard}) {
             )}
         </div>
     )
-
 }
 
 export default Board

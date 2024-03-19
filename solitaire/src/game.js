@@ -89,9 +89,12 @@ function Game() {
             setDeck(deck)
             setDiscardPile(discardPile)
         } else {
-            var temp = deck
-            setDeck(discardPile)
-            setDiscardPile(temp)
+            for (var i = 0; i < discardPile.length; i++) {
+                discardPile[i].visible = false
+                discardPile[i].location = 'deck'
+            }
+            setDeck(discardPile.reverse())
+            setDiscardPile([])
         }
     }
 
@@ -197,7 +200,7 @@ function Game() {
     }
 
     function handleEmptyStack(index) {
-        if (selectedCard && selectedCard.length === 1 && selectedCard[0].number === 13) {
+        if (selectedCard && selectedCard[0].number === 13) {
             if (selectedCard[0].location === 'stacks') {
                 moveCard(stacks[selectedCard[0].locationIndex], stacks[index], 'stacks', index)
             } else if (selectedCard[0].location === 'discard') {
