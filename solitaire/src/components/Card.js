@@ -31,8 +31,8 @@ function Card({card, selectCard, stacked, index}) {
                     + (card.color === 'red' ? ' red-card': '') 
                     + (card.selected ? ' selected-card': '')
                     + (stacked ? ' stacked-card' : '')} >
-                <div className="card-header">{cardLabel} {cardSuit}</div>
-                {!stacked && <div className="card-suit">{cardSuit}</div>}
+                {card.visible && <div className="card-header">{cardLabel} {cardSuit}</div>}
+                {!stacked && card.visible && <div className="card-suit">{cardSuit}</div>}
             </div>
         }   
         </>
