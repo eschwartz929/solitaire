@@ -9,6 +9,7 @@ function Game() {
     const [stacks, setStacks] = useState([])
     const [piles, setPiles] = useState([{suit: 0, cards: []}, {suit: 1, cards: []}, {suit: 2, cards: []}, {suit: 3, cards: []}])
     const [selectedCard, setSelectedCard] = useState([])
+    const [winner, setWinner] = useState(false)
 
     useEffect(() => {
         if (fullDeck.length === 0) {
@@ -168,21 +169,35 @@ function Game() {
     }
 
     function moveCard(source, destination, location, locationIndex) {
-            for (var i = 0; i < selectedCard.length; i++) {
-                source.pop()
-                selectedCard[i].location = location
-                selectedCard[i].locationIndex = locationIndex                    
-                selectedCard[i].selected = false
-                destination.push(selectedCard[i])
-            }
-            if (source.length > 0) {
-                source[source.length - 1].visible = true
-            }
+        for (var i = 0; i < selectedCard.length; i++) {
+            source.pop()
+            selectedCard[i].location = location
+            selectedCard[i].locationIndex = locationIndex                    
+            selectedCard[i].selected = false
+            destination.push(selectedCard[i])
+        }
+        if (source.length > 0) {
+            source[source.length - 1].visible = true
+        }
 
-            setStacks(stacks)
-            setDiscardPile(discardPile)
-            setPiles(piles)
-            setSelectedCard([])
+        setStacks(stacks)
+        setDiscardPile(discardPile)
+        setPiles(piles)
+        setSelectedCard([])
+        checkForWinner()
+    }
+
+    function checkForWinner() {
+        if (piles.length === 4) {
+            for (var i = 0; i < 4; i++) {
+                if (piles[i].cards && piles[i].cards.length === 13) {
+                    continue
+                } else {
+                    return false
+                }
+            }
+            setWinner(true)
+        }
     }
 
     function startFoundation(suit) {
@@ -222,6 +237,7 @@ function Game() {
                     handleEmptyStack={handleEmptyStack}
                 />
             }
+            {winner && <div>You Have Won!</div>}
         </div>
     )
 }
