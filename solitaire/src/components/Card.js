@@ -3,8 +3,8 @@ import "../css/Card.css"
 import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
 
-function Card({card, selectCard, stacked, index}) {
-    const [cardSuit, setCardSuit] = useState(0)
+function Card({card, selectCard, stacked, index, hidden}) {
+    const [cardSuit, setCardSuit] = useState('')
     const [cardLabel, setCardLabel] = useState('')
     useEffect(() => {
         if (card) {
@@ -27,12 +27,12 @@ function Card({card, selectCard, stacked, index}) {
             <div 
                 onClick={handleClick} 
                 className={'card' 
-                    + (!card.visible ? ' hidden-card ' : '') 
-                    + (card.color === 'red' ? ' red-card': '') 
-                    + (card.selected ? ' selected-card': '')
+                    + (!card.visible || hidden ? ' hidden-card' : '') 
+                    + (card.color === 'red' ? ' red-card' : '') 
+                    + (card.selected ? ' selected-card' : '')
                     + (stacked ? ' stacked-card' : '')} >
-                {card.visible && <div className="card-header">{cardLabel} {cardSuit}</div>}
-                {!stacked && card.visible && <div className="card-suit">{cardSuit}</div>}
+                {card && card.visible && <div className="card-header">{cardLabel} {cardSuit}</div>}
+                {!stacked && card && card.visible && <div className="card-suit">{cardSuit}</div>}
             </div>
         }   
         </>

@@ -69,10 +69,10 @@ function Piles({piles, selectCard, startFoundation}) {
 function Stacks({stacks, selectCard, handleEmptyStack}) {
     return (
         <div className="stacks-section">
-            {stacks.map((stack, index) => 
+            {[...Array(7)].map((element, index) => 
                 <div className="stack" key={index}>
-                    {stack.length > 0 && <Stack cards={stack} selectCard={selectCard}></Stack>}
-                    {stack.length === 0 && <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>}
+                    {stacks[index] && stacks[index].length > 0 && <Stack cards={stacks[index]} selectCard={selectCard}></Stack>}
+                    {stacks[index] && stacks[index].length === 0 && <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>}
                 </div>
             )}
         </div>
