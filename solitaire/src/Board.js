@@ -35,10 +35,15 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
 
     return (
         <div className="deck">
-            {deck.length > 0 && <Card card={deck[deck.length - 1]} selectCard={clickDeck}></Card>}
-            {deck.length === 0 && <EmptyCard icon='&#8635;' handleClick={drawCard}/>}
-            {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
-            {discardPile.length === 0 && <EmptyCard icon=''/>}
+            <div className="deck-pile">
+                {deck.length > 0 && <Card card={deck[deck.length - 1]} selectCard={clickDeck}></Card>}
+                {deck.length === 0 && <EmptyCard icon='&#8635;' handleClick={drawCard}/>}
+            </div>
+            <div className="deck-pile">
+                {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
+            </div>
+
+
         </div>
     )
 }
@@ -76,7 +81,7 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
 
 function Stack({cards, selectCard}) {
     return (
-        <div className="stack">
+        <div>
             {cards.map((card, index) => 
                 <Card index={index} selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
             )}

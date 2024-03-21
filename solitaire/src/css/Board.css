@@ -1,14 +1,14 @@
-.board {
-    width: 50%;
-}
-
 .top-row {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .deck {
     display: flex;
+    justify-content: space-between;
+}
+
+.deck-pile {
     margin: 5px;
 }
 
@@ -23,7 +23,7 @@
 .stacks-section {
     margin-top: 5px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .stack {
