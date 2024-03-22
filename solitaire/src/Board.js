@@ -71,8 +71,10 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
         <div className="stacks-section">
             {[...Array(7)].map((element, index) => 
                 <div className="stack" key={index}>
-                    {stacks[index] && stacks[index].length > 0 && <Stack cards={stacks[index]} selectCard={selectCard}></Stack>}
-                    {stacks[index] && stacks[index].length === 0 && <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>}
+                    {stacks[index] && stacks[index].length > 0 
+                        ? <Stack cards={stacks[index]} selectCard={selectCard}></Stack>
+                        : <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>
+                    }
                 </div>
             )}
         </div>

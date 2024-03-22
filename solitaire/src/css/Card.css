@@ -17,8 +17,8 @@
 }
 
 .hidden-card {
-    background-color: gray;
-}
+    background-image: linear-gradient(to bottom right, red, black);
+ }
 
 .red-card {
     color: red;

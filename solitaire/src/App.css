@@ -25,19 +25,20 @@
 }
 
 .button {
-  color: yellow;
+  color: black;
   font-size: 26px;
   font-family:'Courier New', Courier, monospace;
   font-weight: bold;
-  background-color: blue;
+  background-color: red;
   height: 50px;
   width: 200px;
   border-radius: 15px;
+  border:3px black solid;
 }
 
 .button:hover {
-  color: blue;
-  background-color: yellow;
+  color: red;
+  background-color: black;
 }
 
 .game {
