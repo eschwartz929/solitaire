@@ -109,6 +109,7 @@ function Game() {
                 setSelectedCard([])
             } else {
 
+                // correctly placing a card on a stack
                 if (card.location === 'stacks' && selectedCard.length > 0 && stackIndex === stacks[card.locationIndex].length - 1
                     && card.color !== selectedCard[0].color && card.number === selectedCard[0].number + 1) {
 
@@ -130,14 +131,16 @@ function Game() {
 
                     moveCard(source, destination, card.location, card.locationIndex)
 
+                // correctly placing a card on a foundation pile
                 } else if (card.location === 'piles' && selectedCard.length === 1 && (selectedCard[0].location === 'stacks' || selectedCard[0].location === 'discard')
-                        && card.color === selectedCard[0].color && card.number === selectedCard[0].number - 1) {
+                        && card.suit === selectedCard[0].suit && card.number === selectedCard[0].number - 1) {
 
                     var source = selectedCard[0].location === 'stacks' ? stacks[selectedCard[0].locationIndex] : discardPile
                     var destination = piles[card.locationIndex].cards
 
                     moveCard(source, destination, card.location, card.locationIndex)
 
+                // for all other cases, deselected whatever was already selected (if any), and select the new cards
                 } else {
                     for (var i = 0; i < selectedCard.length; i++) {
                         selectedCard[i].selected = false
@@ -167,6 +170,21 @@ function Game() {
             setSelectedCard([])
         }
     }
+
+    // function handleDoubleClick(card) {
+    //     console.log('double click!', card)
+    //     if (card.visible && (card.location === 'stacks' || card.location === 'discard')) {
+    //         console.log(1)
+    //         if (card.number === 1) {
+    //             // card.selected = true
+    //             setSelectedCard([card])
+    //             console.log(2)
+    //             var source = card.location === 'stacks' ? stacks[card.locationIndex] : discardPile
+    //             var destination = piles[card.suit].cards
+    //             moveCard(source, destination, 'piles', card.suit)
+    //         }
+    //     }
+    // }
 
     function moveCard(source, destination, location, locationIndex) {
         for (var i = 0; i < selectedCard.length; i++) {

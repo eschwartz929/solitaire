@@ -25,7 +25,7 @@ function Card({card, selectCard, stacked, index, hidden}) {
         <>
         {cardSuit && cardLabel && 
             <div 
-                onClick={handleClick} 
+                onClick={handleClick}
                 className={'card' 
                     + (!card.visible || hidden ? ' hidden-card' : '') 
                     + (card.color === 'red' ? ' red-card' : '') 
