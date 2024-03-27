@@ -2,10 +2,20 @@ import {useEffect, useState} from 'react'
 import "../css/Card.css"
 import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
+import {useDraggable} from '@dnd-kit/core';
 
 function Card({card, selectCard, stacked, index, hidden}) {
     const [cardSuit, setCardSuit] = useState('')
     const [cardLabel, setCardLabel] = useState('')
+
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id: card.number + '-' + card.suit + '-draggable',
+    });
+
+    const style = transform ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    } : undefined;
+    
     useEffect(() => {
         if (card) {
             setCardSuit(suits[card.suit])
@@ -26,6 +36,7 @@ function Card({card, selectCard, stacked, index, hidden}) {
         {cardSuit && cardLabel && 
             <div 
                 onClick={handleClick}
+                // ref={setNodeRef} style={style} {...listeners} {...attributes}
                 className={'card' 
                     + (!card.visible || hidden ? ' hidden-card' : '') 
                     + (card.color === 'red' ? ' red-card' : '') 

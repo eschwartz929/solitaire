@@ -3,17 +3,19 @@ import Card from './components/Card'
 import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 import EmptyCard from './components/EmptyCard'
-
+import {DndContext} from '@dnd-kit/core';
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
     return (
-        <div className="board">
-            <div className="top-row">
-                <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
-                <Piles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
+        <DndContext>
+            <div className="board">
+                <div className="top-row">
+                    <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
+                    <Piles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
+                </div>
+                <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
             </div>
-            <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
-        </div>
+        </DndContext>
     )
 }
 
@@ -56,11 +58,21 @@ function Piles({piles, selectCard, startFoundation}) {
                 return (
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
-                            ? <Card className="pile" card={pile.cards[pile.cards.length - 1]} selectCard={selectCard}/>
+                            ? <Pile cards={pile.cards} selectCard={selectCard}/>
                             : <EmptyCard icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
                                                     }
                     </div>)
             }
+            )}
+        </div>
+    )
+}
+
+function Pile({cards, selectCard}) {
+    return (
+        <div>
+            {cards && cards.map((card, index) => 
+                <Card className="pile" key={index} card={card} selectCard={selectCard}/>
             )}
         </div>
     )
