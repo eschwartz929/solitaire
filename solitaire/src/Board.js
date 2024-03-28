@@ -3,15 +3,24 @@ import Card from './components/Card'
 import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 import EmptyCard from './components/EmptyCard'
-import {DndContext} from '@dnd-kit/core';
+import {DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+          activationConstraint: {
+            distance: 8,
+          },
+        })
+      )
+
     return (
-        <DndContext>
+        <DndContext sensors={sensors}>
             <div className="board">
                 <div className="top-row">
                     <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
-                    <Piles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
+                    <FoundationPiles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
                 </div>
                 <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
             </div>
@@ -50,7 +59,7 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
     )
 }
 
-function Piles({piles, selectCard, startFoundation}) {
+function FoundationPiles({piles, selectCard, startFoundation}) {
 
     return (
         <div className="piles">
