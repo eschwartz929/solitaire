@@ -108,17 +108,16 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
     return (
         <div className="stacks-section">
             {[...Array(7)].map((element, index) => 
-                <div className="stack" key={index}>
-                    <EmptyCard hidden={stacks[index].length > 0} icon="" handleClick={() => handleEmptyStack(index)}/>
-                    {stacks[index] && <Stack cards={stacks[index]} selectCard={selectCard} index={index}></Stack>}
+                <div className="stack" key={index}>                    
+                    <Stack cards={stacks[index]} selectCard={selectCard} index={index} handleEmptyStack={handleEmptyStack}></Stack>
                 </div>
             )}
         </div>
     ) 
 }
 
-function Stack({cards, selectCard, index}) {
-    const {setNodeRef, isOver} = useDroppable({
+function Stack({cards, selectCard, index, handleEmptyStack}) {
+    const {setNodeRef: fullStackNodeRef} = useDroppable({
         id: 'stack-' + index,
         data: {
             source: {cards: cards},
@@ -132,6 +131,16 @@ function Stack({cards, selectCard, index}) {
         }
     })
 
+    const {setNodeRef: emptyStackNodeRef} = useDroppable({
+        id: 'empty-stack-' + index,
+        data: {
+            source: {cards: cards},
+            location: 'stacks',
+            locationIndex: index,
+            accepts: ['13-0', '13-1', '13-2', '13-3']
+        }
+    })
+
     // useEffect(() => {
     //     if (!isOver) {
     //         pile.highlighted = false
@@ -140,12 +149,15 @@ function Stack({cards, selectCard, index}) {
     // }, [pile, isOver])
 
     return (
-        <div>
+        <>
+            <div ref={emptyStackNodeRef}>
+                <EmptyCard hidden={cards.length > 0} icon="" handleClick={() => handleEmptyStack(index)}/>
+            </div>
             {cards.map((card, cardIndex) => 
                 <Card index={cardIndex} selectCard={selectCard} key={cardIndex} card={card} stacked={cardIndex !== cards.length - 1}></Card>
             )}
-            {cards.length > 0 && <div ref={setNodeRef} className='invisible-card'></div>}
-        </div>
+            {cards.length > 0 && <div ref={fullStackNodeRef} className='invisible-card'></div>}
+        </>
     )
 }
 

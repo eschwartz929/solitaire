@@ -296,7 +296,7 @@ function Game() {
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                <DndContext sensors={sensors} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                     <Board 
                         deck={deck} 
                         discardPile={discardPile} 
