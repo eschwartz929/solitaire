@@ -8,32 +8,14 @@ import {DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@d
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-          activationConstraint: {
-            distance: 8,
-          },
-        })
-      )
-
-      function handleDragOver(event) {
-        const {active, over} = event
-
-        if (over && over.data.current.accepts.includes(active.data.current.type)) {
-            over.data.current.source.highlighted = true
-        } 
-      }
-
     return (
-        <DndContext sensors={sensors} onDragOver={handleDragOver}>
-            <div className="board">
-                <div className="top-row">
-                    <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
-                    <FoundationPiles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
-                </div>
-                <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
+        <div className="board">
+            <div className="top-row">
+                <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
+                <FoundationPiles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
             </div>
-        </DndContext>
+            <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
+        </div>
     )
 }
 
@@ -83,6 +65,8 @@ function FoundationPile({pile, selectCard, startFoundation}) {
         id: 'foundation-pile-' + pile.suit,
         data: {
             source: pile,
+            location: 'piles',
+            locationIndex: pile.suit,
             accepts: pile.cards.length > 0 
                 ? [(pile.cards[pile.cards.length - 1].number + 1) + '-' + pile.suit] 
                 : ['1-' + pile.suit]

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Board from "./Board.js"
+import {DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@dnd-kit/core';
 
 function Game() {
     const [activeGame, setActiveGame] = useState(false)
@@ -26,6 +27,7 @@ function Game() {
         }
 
     }, [fullDeck])
+
 
     function newGame() {
         setActiveGame(true)
@@ -186,11 +188,18 @@ function Game() {
     //     }
     // }
 
-    function moveCard(source, destination, location, locationIndex) {
+    /**
+     * 
+     * @param {Array} source - where the card is moving from
+     * @param {Array} destination - where the card is moving to
+     * @param {String} destinationString - string representation of the destination. ('piles', 'stacks', or 'discard')
+     * @param {Number} destinationIndex - index of the destination array that we are moving the card to
+     */
+    function moveCard(source, destination, destinationString, destinationIndex) {
         for (var i = 0; i < selectedCard.length; i++) {
             source.pop()
-            selectedCard[i].location = location
-            selectedCard[i].locationIndex = locationIndex                    
+            selectedCard[i].location = destinationString
+            selectedCard[i].locationIndex = destinationIndex                    
             selectedCard[i].selected = false
             destination.push(selectedCard[i])
         }
@@ -240,20 +249,65 @@ function Game() {
         }
     }
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+            distance: 8,
+            },
+        })
+    )
+
+    function handleDragOver(event) {
+        const {active, over} = event
+
+        if (over && over.data.current.accepts.includes(active.data.current.type)) {
+            over.data.current.source.highlighted = true
+        } 
+    }
+
+    function handleDragEnd(event) {
+        const {active, over} = event
+
+        if (over && over.data.current.accepts.includes(active.data.current.type)) {
+            var cards = active.data.current.cards
+            for (var i = 0; i < cards.length; i++) {
+                selectedCard.push(cards[i])
+            }
+
+            var source = []
+
+            switch(cards[0].location) {
+                case 'stacks':
+                    source = stacks[cards[0].locationIndex]
+                    break
+                case 'discard':
+                    source = discardPile
+                    break
+                case 'piles':
+                    source = piles[cards[0].locationIndex].cards
+                    break
+            }
+
+            moveCard(source, over.data.current.source.cards, over.data.current.location, over.data.current.locationIndex)
+        } 
+    }
+
     return (
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                <Board 
-                    deck={deck} 
-                    discardPile={discardPile} 
-                    drawCard={drawCard} 
-                    selectCard={selectCard} 
-                    piles={piles} 
-                    stacks={stacks} 
-                    startFoundation={startFoundation}
-                    handleEmptyStack={handleEmptyStack}
-                />
+                <DndContext sensors={sensors} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+                    <Board 
+                        deck={deck} 
+                        discardPile={discardPile} 
+                        drawCard={drawCard} 
+                        selectCard={selectCard} 
+                        piles={piles} 
+                        stacks={stacks} 
+                        startFoundation={startFoundation}
+                        handleEmptyStack={handleEmptyStack}
+                    />
+                </DndContext>
             }
             {winner && <div>You Have Won!</div>}
         </div>

@@ -13,8 +13,7 @@ function Card({card, selectCard, stacked, index, hidden, highlighted}) {
             ? card.location + '-' + card.locationIndex + '-draggable' 
             : card.number + '-' + card.suit + 'draggable',
         data: {
-            number: card.number,
-            suit: card.suit,
+            cards: [card],
             type: card.number + '-' + card.suit
         }
     });
