@@ -4,7 +4,7 @@ import Card from './components/Card'
 import {useEffect, useState} from 'react'
 import suits from "./config/suits"
 import EmptyCard from './components/EmptyCard'
-import {DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
+import {DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@dnd-kit/core';
 
 function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
 
@@ -16,8 +16,16 @@ function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFou
         })
       )
 
+      function handleDragOver(event) {
+        const {active, over} = event
+
+        if (over && over.data.current.accepts.includes(active.data.current.type)) {
+            over.data.current.source.highlighted = true
+        } 
+      }
+
     return (
-        <DndContext sensors={sensors}>
+        <DndContext sensors={sensors} onDragOver={handleDragOver}>
             <div className="board">
                 <div className="top-row">
                     <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
@@ -64,26 +72,45 @@ function FoundationPiles({piles, selectCard, startFoundation}) {
 
     return (
         <div className="piles">
-            {piles.map((pile, index) => {
-                return (
-                    <div className="pile" key={index}>
-                        {pile.cards.length > 0
-                            ? <Pile foundation cards={pile.cards} selectCard={selectCard}/>
-                            : <EmptyCard type="pile" icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
-                        }
-                    </div>)
-            }
-            )}
+            {piles.map((pile, index) => <FoundationPile key={index} pile={pile} selectCard={selectCard} startFoundation={startFoundation}/>)}
         </div>
     )
 }
 
-function Pile({cards, selectCard, foundation}) {
+function FoundationPile({pile, selectCard, startFoundation}) {
+
+    const {setNodeRef, isOver} = useDroppable({
+        id: 'foundation-pile-' + pile.suit,
+        data: {
+            source: pile,
+            accepts: pile.cards.length > 0 
+                ? [(pile.cards[pile.cards.length - 1].number + 1) + '-' + pile.suit] 
+                : ['1-' + pile.suit]
+        }
+    })
+
+    useEffect(() => {
+        if (!isOver) {
+            pile.highlighted = false
+        }
+
+    }, [pile, isOver])
+
+    return (
+        <div className={"pile" + (pile.highlighted && isOver ? " highlighted" : "")} ref={setNodeRef}>
+            {pile.cards.length > 0
+                ? <Pile foundation cards={pile.cards} highlighted={pile.highlighted && isOver} selectCard={selectCard}/>
+                : <EmptyCard type="pile" icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
+            }
+        </div>)
+}
+
+function Pile({cards, selectCard, foundation, highlighted}) {
     return (
         <div>
             {cards && 
             <>
-                {cards.length > 0 && <Card card={cards[cards.length - 1]} selectCard={selectCard}/>}
+                {cards.length > 0 && <Card highlighted={highlighted} card={cards[cards.length - 1]} selectCard={selectCard}/>}
                 {cards.length > 1 && <Card hidden card={cards[cards.length - 2]} selectCard={selectCard}/>}
                 {cards.length === 1 && foundation && <EmptyCard hidden type="pile" icon={suits[cards[0].suit]}/>}
             </>

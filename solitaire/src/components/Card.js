@@ -4,7 +4,7 @@ import suits from "../config/suits"
 import numbers from "../config/cardNumbers"
 import {useDraggable} from '@dnd-kit/core';
 
-function Card({card, selectCard, stacked, index, hidden}) {
+function Card({card, selectCard, stacked, index, hidden, highlighted}) {
     const [cardSuit, setCardSuit] = useState('')
     const [cardLabel, setCardLabel] = useState('')
 
@@ -15,6 +15,7 @@ function Card({card, selectCard, stacked, index, hidden}) {
         data: {
             number: card.number,
             suit: card.suit,
+            type: card.number + '-' + card.suit
         }
     });
 
@@ -48,7 +49,7 @@ function Card({card, selectCard, stacked, index, hidden}) {
                 style={{...style, zIndex: isDragging ? 1 : 0}}
                 className={'card' 
                     + (card.color === 'red' ? ' red-card' : '') 
-                    + (card.selected ? ' selected-card' : '')
+                    + ((card.selected || highlighted) ? ' selected-card' : '')
                     + (stacked ? ' stacked-card' : '')
                     + (hidden ? ' hidden-card' : '')
                 } >

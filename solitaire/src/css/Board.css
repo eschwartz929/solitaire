@@ -24,6 +24,10 @@
     position: relative;
 }
 
+.highlighted {
+    background-color: yellow !important;
+}
+
 .stacks-section {
     margin-top: 5px;
     display: flex;
