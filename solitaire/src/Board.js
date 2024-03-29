@@ -1,4 +1,5 @@
 import './css/Board.css'
+import './css/Card.css'
 import Card from './components/Card'
 import {useEffect, useState} from 'react'
 import suits from "./config/suits"
@@ -67,8 +68,8 @@ function FoundationPiles({piles, selectCard, startFoundation}) {
                 return (
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
-                            ? <Pile cards={pile.cards} selectCard={selectCard}/>
-                            : <EmptyCard type="pile" data={pile.cards} icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
+                            ? <Pile foundation cards={pile.cards} selectCard={selectCard}/>
+                            : <EmptyCard type="pile" icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
                         }
                     </div>)
             }
@@ -77,13 +78,14 @@ function FoundationPiles({piles, selectCard, startFoundation}) {
     )
 }
 
-function Pile({cards, selectCard}) {
+function Pile({cards, selectCard, foundation}) {
     return (
         <div>
             {cards && 
             <>
                 {cards.length > 0 && <Card card={cards[cards.length - 1]} selectCard={selectCard}/>}
                 {cards.length > 1 && <Card hidden card={cards[cards.length - 2]} selectCard={selectCard}/>}
+                {cards.length === 1 && foundation && <EmptyCard hidden type="pile" icon={suits[cards[0].suit]}/>}
             </>
             }
 
