@@ -240,7 +240,7 @@ function Game() {
     }
 
     function handleEmptyStack(index) {
-        if (selectedCard && selectedCard[0].number === 13) {
+        if (selectedCard && selectedCard.length > 0 && selectedCard[0].number === 13) {
             if (selectedCard[0].location === 'stacks') {
                 moveCard(stacks[selectedCard[0].locationIndex], stacks[index], 'stacks', index)
             } else if (selectedCard[0].location === 'discard') {

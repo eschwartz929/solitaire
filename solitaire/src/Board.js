@@ -94,9 +94,9 @@ function Pile({cards, selectCard, foundation, highlighted}) {
         <div>
             {cards && 
             <>
+                {foundation && <EmptyCard hidden type="pile" icon={suits[cards[0].suit]}/>}
                 {cards.length > 0 && <Card highlighted={highlighted} card={cards[cards.length - 1]} selectCard={selectCard}/>}
                 {cards.length > 1 && <Card hidden card={cards[cards.length - 2]} selectCard={selectCard}/>}
-                {cards.length === 1 && foundation && <EmptyCard hidden type="pile" icon={suits[cards[0].suit]}/>}
             </>
             }
 
@@ -109,10 +109,8 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
         <div className="stacks-section">
             {[...Array(7)].map((element, index) => 
                 <div className="stack" key={index}>
-                    {stacks[index] && stacks[index].length > 0 
-                        ? <Stack cards={stacks[index]} selectCard={selectCard}></Stack>
-                        : <EmptyCard icon="" handleClick={() => handleEmptyStack(index)}/>
-                    }
+                    <EmptyCard hidden={stacks[index].length > 0} icon="" handleClick={() => handleEmptyStack(index)}/>
+                    {stacks[index] && <Stack cards={stacks[index]} selectCard={selectCard}></Stack>}
                 </div>
             )}
         </div>
@@ -120,10 +118,11 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
 }
 
 function Stack({cards, selectCard}) {
+
     return (
         <div>
-            {cards.map((card, index) => 
-                <Card index={index} selectCard={selectCard} key={index} card={card} stacked={index !== cards.length - 1}></Card>
+            {cards.map((card, cardIndex) => 
+                <Card index={cardIndex} selectCard={selectCard} key={cardIndex} card={card} stacked={cardIndex !== cards.length - 1}></Card>
             )}
         </div>
     )

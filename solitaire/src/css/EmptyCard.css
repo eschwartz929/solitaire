@@ -8,3 +8,9 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.hidden-empty-card {
+    position: relative;
+    margin-bottom: -101.5px;
+    z-index: -1 !important;
+}
