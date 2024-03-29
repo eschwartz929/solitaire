@@ -110,20 +110,41 @@ function Stacks({stacks, selectCard, handleEmptyStack}) {
             {[...Array(7)].map((element, index) => 
                 <div className="stack" key={index}>
                     <EmptyCard hidden={stacks[index].length > 0} icon="" handleClick={() => handleEmptyStack(index)}/>
-                    {stacks[index] && <Stack cards={stacks[index]} selectCard={selectCard}></Stack>}
+                    {stacks[index] && <Stack cards={stacks[index]} selectCard={selectCard} index={index}></Stack>}
                 </div>
             )}
         </div>
     ) 
 }
 
-function Stack({cards, selectCard}) {
+function Stack({cards, selectCard, index}) {
+    const {setNodeRef, isOver} = useDroppable({
+        id: 'stack-' + index,
+        data: {
+            source: {cards: cards},
+            location: 'stacks',
+            locationIndex: index,
+            accepts: cards.length > 0 
+                ? cards[cards.length - 1].suit % 2 === 0 
+                    ? [(cards[cards.length - 1].number - 1) + '-1',  (cards[cards.length - 1].number - 1) + '-3']
+                    : [(cards[cards.length - 1].number - 1) + '-0',  (cards[cards.length - 1].number - 1) + '-2']
+                : []
+        }
+    })
+
+    // useEffect(() => {
+    //     if (!isOver) {
+    //         pile.highlighted = false
+    //     }
+
+    // }, [pile, isOver])
 
     return (
         <div>
             {cards.map((card, cardIndex) => 
                 <Card index={cardIndex} selectCard={selectCard} key={cardIndex} card={card} stacked={cardIndex !== cards.length - 1}></Card>
             )}
+            {cards.length > 0 && <div ref={setNodeRef} className='invisible-card'></div>}
         </div>
     )
 }

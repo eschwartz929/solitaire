@@ -37,3 +37,13 @@
 .stack {
     margin: 5px;
 }
+
+.invisible-card {
+    height: 100px;
+    width: 70px;
+    border-radius: 3px;
+    position: relative;
+    margin-top: -75px;
+    padding-right: 1px;
+    z-index: -1;
+}
