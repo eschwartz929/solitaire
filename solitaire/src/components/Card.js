@@ -8,7 +8,7 @@ function Card({card, selectCard, stacked, index, hidden}) {
     const [cardSuit, setCardSuit] = useState('')
     const [cardLabel, setCardLabel] = useState('')
 
-    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
         id: stacked 
             ? card.location + '-' + card.locationIndex + '-draggable' 
             : card.number + '-' + card.suit + 'draggable',
@@ -42,23 +42,25 @@ function Card({card, selectCard, stacked, index, hidden}) {
         {cardSuit && cardLabel && card.visible &&
             <div 
                 onClick={handleClick}
-                // ref={setNodeRef} 
-                // style={style} 
-                // {...listeners} 
-                // {...attributes}
+                ref={setNodeRef} 
+                {...listeners} 
+                {...attributes}
+                style={{...style, zIndex: isDragging ? 1 : 0}}
                 className={'card' 
                     + (card.color === 'red' ? ' red-card' : '') 
                     + (card.selected ? ' selected-card' : '')
-                    + (stacked ? ' stacked-card' : '')} >
+                    + (stacked ? ' stacked-card' : '')
+                    + (hidden ? ' hidden-card' : '')
+                } >
                 <div className="card-header">{cardLabel} {cardSuit}</div>
-                {!stacked && card && <div className="card-suit">{cardSuit}</div>}
+                {card && <div className="card-suit">{cardSuit}</div>}
             </div>
         }
 
         {cardSuit && cardLabel && !card.visible && 
             <div 
                 onClick={handleClick}
-                className={'card hidden-card' 
+                className={'card flipped-card' 
                     + (stacked ? ' stacked-card' : '')} >
             </div>
         } 

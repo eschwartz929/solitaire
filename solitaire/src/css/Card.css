@@ -4,6 +4,7 @@
     height: 100px;
     width: 70px;
     border-radius: 3px;
+    position: relative;
 }
 
 .card-header {
@@ -16,9 +17,16 @@
     font-size: 50px;
 }
 
-.hidden-card {
+.flipped-card {
     background-image: linear-gradient(to bottom right, red, black);
  }
+
+ .hidden-card {
+    position: relative;
+    margin-top: -100px;
+    z-index: -1 !important;
+ }
+ 
 
 .red-card {
     color: red;

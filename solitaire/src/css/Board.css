@@ -17,7 +17,11 @@
 }
 
 .pile {
+    display: flex;
+    flex-direction: column;
     margin: 5px;
+    height: 100px;
+    position: relative;
 }
 
 .stacks-section {

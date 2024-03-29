@@ -51,7 +51,7 @@ function Deck({deck, discardPile, drawCard, selectCard}) {
                 {deck.length === 0 && <EmptyCard icon='&#8635;' handleClick={drawCard}/>}
             </div>
             <div className="deck-pile">
-                {discardPile.length > 0 && <Card card={discardPile[discardPile.length - 1]} selectCard={selectCard}></Card>}
+                {discardPile.length > 0 && <Pile cards={discardPile} selectCard={selectCard}></Pile>}
             </div>
 
 
@@ -68,8 +68,8 @@ function FoundationPiles({piles, selectCard, startFoundation}) {
                     <div className="pile" key={index}>
                         {pile.cards.length > 0
                             ? <Pile cards={pile.cards} selectCard={selectCard}/>
-                            : <EmptyCard icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
-                                                    }
+                            : <EmptyCard type="pile" data={pile.cards} icon={suits[pile.suit]} handleClick={() => startFoundation(pile.suit)}/>
+                        }
                     </div>)
             }
             )}
@@ -80,9 +80,13 @@ function FoundationPiles({piles, selectCard, startFoundation}) {
 function Pile({cards, selectCard}) {
     return (
         <div>
-            {cards && cards.map((card, index) => 
-                <Card className="pile" key={index} card={card} selectCard={selectCard}/>
-            )}
+            {cards && 
+            <>
+                {cards.length > 0 && <Card card={cards[cards.length - 1]} selectCard={selectCard}/>}
+                {cards.length > 1 && <Card hidden card={cards[cards.length - 2]} selectCard={selectCard}/>}
+            </>
+            }
+
         </div>
     )
 }
