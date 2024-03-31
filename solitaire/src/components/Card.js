@@ -9,9 +9,7 @@ function Card({card, selectCard, stacked, index, hidden, highlighted}) {
     const [cardLabel, setCardLabel] = useState('')
 
     const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-        id: stacked 
-            ? card.location + '-' + card.locationIndex + '-draggable' 
-            : card.number + '-' + card.suit + 'draggable',
+        id: card.number + '-' + card.suit,
         data: {
             cards: [card],
             type: card.number + '-' + card.suit

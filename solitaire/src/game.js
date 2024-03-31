@@ -19,7 +19,7 @@ function Game() {
 
                 for (var j = 0; j < 4; j++) {
                     var color = j % 2 === 0 ? 'black' : 'red'
-                    fullDeck.push({suit: j, number: i, visible: false, color: color})
+                    fullDeck.push({suit: j, number: i, visible: false, color: color, children: []})
                 }
 
             }
@@ -196,6 +196,15 @@ function Game() {
      * @param {Number} destinationIndex - index of the destination array that we are moving the card to
      */
     function moveCard(source, destination, destinationString, destinationIndex) {
+
+        if (destinationString === 'stacks') {
+            for (var j = 0; j < destination.length; j++) {
+                if (destination[j].visible === true) {
+                    destination[j].children = destination[j].children.concat(selectedCard)
+                }
+            }
+        }
+
         for (var i = 0; i < selectedCard.length; i++) {
             source.pop()
             selectedCard[i].location = destinationString
@@ -205,6 +214,10 @@ function Game() {
         }
         if (source.length > 0) {
             source[source.length - 1].visible = true
+        }
+
+        for (var i = 0; i < source.length; i++) {
+            source[i].children = source[i].children.filter(n => !selectedCard.includes(n))
         }
 
         setStacks(stacks)
@@ -270,8 +283,9 @@ function Game() {
 
         if (over && over.data.current.accepts.includes(active.data.current.type)) {
             var cards = active.data.current.cards
-            for (var i = 0; i < cards.length; i++) {
-                selectedCard.push(cards[i])
+            selectedCard.push(cards[0])
+            for (var i = 0; i < selectedCard[0].children.length; i++) {
+                selectedCard.push(selectedCard[0].children[i])
             }
 
             var source = []
