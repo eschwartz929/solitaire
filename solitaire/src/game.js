@@ -11,6 +11,7 @@ function Game() {
     const [piles, setPiles] = useState([{suit: 0, cards: []}, {suit: 1, cards: []}, {suit: 2, cards: []}, {suit: 3, cards: []}])
     const [selectedCard, setSelectedCard] = useState([])
     const [winner, setWinner] = useState(false)
+    const [activeCard, setActiveCard] = useState(null)
 
     useEffect(() => {
         if (fullDeck.length === 0) {
@@ -270,6 +271,14 @@ function Game() {
         })
     )
 
+    function handleDragStart(event) {
+        const {active} = event
+
+        if (active) {
+            setActiveCard(active.data.current.cards[0])
+        }
+    }
+
     function handleDragOver(event) {
         const {active, over} = event
 
@@ -282,35 +291,39 @@ function Game() {
         const {active, over} = event
 
         if (over && over.data.current.accepts.includes(active.data.current.type)) {
-            var cards = active.data.current.cards
-            selectedCard.push(cards[0])
-            for (var i = 0; i < selectedCard[0].children.length; i++) {
-                selectedCard.push(selectedCard[0].children[i])
+            if (over.data.current.location !== 'piles' || active.data.current.cards[0].children.length === 0)  {
+                var cards = active.data.current.cards
+                selectedCard.push(cards[0])
+                for (var i = 0; i < selectedCard[0].children.length; i++) {
+                    selectedCard.push(selectedCard[0].children[i])
+                }
+    
+                var source = []
+    
+                switch(cards[0].location) {
+                    case 'stacks':
+                        source = stacks[cards[0].locationIndex]
+                        break
+                    case 'discard':
+                        source = discardPile
+                        break
+                    case 'piles':
+                        source = piles[cards[0].locationIndex].cards
+                        break
+                }
+    
+                moveCard(source, over.data.current.source.cards, over.data.current.location, over.data.current.locationIndex)
             }
 
-            var source = []
-
-            switch(cards[0].location) {
-                case 'stacks':
-                    source = stacks[cards[0].locationIndex]
-                    break
-                case 'discard':
-                    source = discardPile
-                    break
-                case 'piles':
-                    source = piles[cards[0].locationIndex].cards
-                    break
-            }
-
-            moveCard(source, over.data.current.source.cards, over.data.current.location, over.data.current.locationIndex)
         } 
+        setActiveCard(null)
     }
 
     return (
         <div className="game">
             {!activeGame && <button className="button" onClick={newGame}>New Game</button>}
             {activeGame && fullDeck.length > 1 && piles.length > 1 &&
-                <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                     <Board 
                         deck={deck} 
                         discardPile={discardPile} 
@@ -320,6 +333,7 @@ function Game() {
                         stacks={stacks} 
                         startFoundation={startFoundation}
                         handleEmptyStack={handleEmptyStack}
+                        activeCard={activeCard}
                     />
                 </DndContext>
             }

@@ -6,7 +6,7 @@ import suits from "./config/suits"
 import EmptyCard from './components/EmptyCard'
 import {DndContext, PointerSensor, useDroppable, useSensor, useSensors} from '@dnd-kit/core';
 
-function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack}) {
+function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFoundation, handleEmptyStack, activeCard}) {
 
     return (
         <div className="board">
@@ -14,7 +14,7 @@ function Board({deck, discardPile, drawCard, selectCard, piles, stacks, startFou
                 <Deck deck={deck} discardPile={discardPile} drawCard={drawCard} selectCard={selectCard}/>
                 <FoundationPiles piles={piles} selectCard={selectCard} startFoundation={startFoundation}/>
             </div>
-            <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack}></Stacks>
+            <Stacks stacks={stacks} selectCard={selectCard} handleEmptyStack={handleEmptyStack} activeCard={activeCard}></Stacks>
         </div>
     )
 }
@@ -104,19 +104,19 @@ function Pile({cards, selectCard, foundation, highlighted}) {
     )
 }
 
-function Stacks({stacks, selectCard, handleEmptyStack}) {
+function Stacks({stacks, selectCard, handleEmptyStack, activeCard}) {
     return (
         <div className="stacks-section">
             {[...Array(7)].map((element, index) => 
                 <div className="stack" key={index}>                    
-                    <Stack cards={stacks[index]} selectCard={selectCard} index={index} handleEmptyStack={handleEmptyStack}></Stack>
+                    <Stack cards={stacks[index]} selectCard={selectCard} index={index} handleEmptyStack={handleEmptyStack} activeCard={activeCard}></Stack>
                 </div>
             )}
         </div>
     ) 
 }
 
-function Stack({cards, selectCard, index, handleEmptyStack}) {
+function Stack({cards, selectCard, index, handleEmptyStack, activeCard}) {
     const {setNodeRef: fullStackNodeRef} = useDroppable({
         id: 'stack-' + index,
         data: {
@@ -154,7 +154,7 @@ function Stack({cards, selectCard, index, handleEmptyStack}) {
                 <EmptyCard hidden={cards.length > 0} icon="" handleClick={() => handleEmptyStack(index)}/>
             </div>
             {cards.map((card, cardIndex) => 
-                <Card index={cardIndex} selectCard={selectCard} key={cardIndex} card={card} stacked={cardIndex !== cards.length - 1}></Card>
+                <Card dragging={activeCard && activeCard.children.includes(card)} index={cardIndex} selectCard={selectCard} key={cardIndex} card={card} stacked={cardIndex !== cards.length - 1}></Card>
             )}
             {cards.length > 0 && <div ref={fullStackNodeRef} className='invisible-card'></div>}
         </>
